@@ -1338,10 +1338,7 @@ export async function runQaFlowSuite(params?: QaSuiteRunParams): Promise<QaSuite
     params?.alternateModel,
     defaultQaModelForMode(providerMode, true),
   );
-  const fastMode =
-    typeof params?.fastMode === "boolean"
-      ? params.fastMode
-      : isQaFastModeEnabled({ primaryModel, alternateModel });
+  const fastMode = params?.fastMode ?? isQaFastModeEnabled({ primaryModel, alternateModel });
   const outputDir = await resolveQaSuiteOutputDir(repoRoot, params?.outputDir);
   const catalog = readQaBootstrapScenarioCatalog();
   const selectedScenarios = selectQaFlowSuiteScenarios({
@@ -1350,6 +1347,7 @@ export async function runQaFlowSuite(params?: QaSuiteRunParams): Promise<QaSuite
     providerMode,
     primaryModel,
     channelDriver: params?.channelDriver ?? params?.channelDriverSelection?.channelDriver,
+    channel: params?.channelId ?? params?.channelDriverSelection?.channel,
     claudeCliAuthMode: params?.claudeCliAuthMode,
   });
   const enabledPluginIds = [
@@ -1363,7 +1361,8 @@ export async function runQaFlowSuite(params?: QaSuiteRunParams): Promise<QaSuite
   ];
   const gatewayConfigPatch = collectQaSuiteGatewayConfigPatch(
     selectedScenarios,
-    params?.adapterOptions?.sutAccountId?.trim() || "sut",
+    params?.adapterOptions?.sutAccountId?.trim() ||
+      (params?.channelDriverSelection?.channelDriver === "crabline" ? "default" : "sut"),
   );
   const gatewayRuntimeOptions = collectQaSuiteGatewayRuntimeOptions(selectedScenarios);
   const concurrency = normalizeQaSuiteConcurrency(
