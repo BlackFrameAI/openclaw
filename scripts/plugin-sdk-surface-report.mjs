@@ -204,7 +204,8 @@ export function readPluginSdkSurfaceBudgets(env = process.env) {
     ),
     publicExports: readPluginSdkSurfaceBudgetEnv(
       "OPENCLAW_PLUGIN_SDK_MAX_PUBLIC_EXPORTS",
-      10645,
+      // +3: registerMcpServerConnectionResolver context/result/resolver types (#106229).
+      10648,
       env,
     ),
     publicFunctionExports: readPluginSdkSurfaceBudgetEnv(

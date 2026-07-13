@@ -1713,6 +1713,12 @@ export async function runEmbeddedAttempt(
           agentDir,
           cfg: params.config,
           manifestRegistry: bundleManifestRegistry,
+          // senderId is only set from the verified inbound sender (sessionCtx.SenderId
+          // or the triggering run's sender on follow-ups). Cron/subagent/heartbeat runs
+          // leave it unset, so requester-scoped MCP stays fail-closed for those paths.
+          requesterSenderId: params.senderId,
+          agentAccountId: params.agentAccountId,
+          messageChannel: params.messageChannel ?? params.messageProvider,
         })
       : undefined;
     bundleMcpRuntime = bundleMcpSessionRuntime
