@@ -442,7 +442,6 @@ export type ArtifactDownloadResult = {
 
 export type SessionRunStatus = "running" | "done" | "failed" | "killed" | "timeout";
 type SubagentRunState = "active" | "interrupted" | "historical";
-
 type SessionCompactionCheckpointReason =
   | "manual"
   | "auto-threshold"
@@ -477,6 +476,7 @@ type SessionCompactionCheckpointPreview = Pick<
 
 export type GatewaySessionRow = {
   key: string;
+  presentation?: import("./session-presentation.js").SessionPresentation;
   spawnedBy?: string;
   /** Managed worktree bound to this session (repo checkout + branch). */
   worktree?: { id: string; branch: string; repoRoot: string };
