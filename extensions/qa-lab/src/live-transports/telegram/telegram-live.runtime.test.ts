@@ -944,6 +944,7 @@ describe("telegram live qa runtime", () => {
     expect(
       testing.matchesTelegramScenarioReply({
         groupId: "-100123",
+        sentAtMs: 1_700_000_000_000,
         sentMessageId: 55,
         sutBotId: 88,
         message: {
@@ -965,6 +966,7 @@ describe("telegram live qa runtime", () => {
     expect(
       testing.matchesTelegramScenarioReply({
         groupId: "-100123",
+        sentAtMs: 1_700_000_000_000,
         sentMessageId: 55,
         sutBotId: 88,
         message: {
@@ -986,6 +988,7 @@ describe("telegram live qa runtime", () => {
     expect(
       testing.matchesTelegramScenarioReply({
         groupId: "-100123",
+        sentAtMs: 1_700_000_000_000,
         sentMessageId: 55,
         sutBotId: 88,
         message: {
@@ -1008,6 +1011,7 @@ describe("telegram live qa runtime", () => {
       testing.matchesTelegramScenarioReply({
         allowAnySutReply: true,
         groupId: "-100123",
+        sentAtMs: 1_700_000_000_000,
         sentMessageId: 55,
         sutBotId: 88,
         message: {
@@ -1029,6 +1033,7 @@ describe("telegram live qa runtime", () => {
       testing.matchesTelegramScenarioReply({
         allowAnySutReply: true,
         groupId: "-100123",
+        sentAtMs: 1_700_000_000_000,
         sentMessageId: 55,
         sutBotId: 88,
         message: {
@@ -1041,6 +1046,27 @@ describe("telegram live qa runtime", () => {
           text: "stale reply from a previous scenario",
           replyToMessageId: undefined,
           timestamp: 1_700_000_004_000,
+          inlineButtons: [],
+          mediaKinds: [],
+        },
+      }),
+    ).toBe(false);
+    expect(
+      testing.matchesTelegramScenarioReply({
+        groupId: "-100123",
+        sentAtMs: 1_700_000_000_000,
+        sentMessageId: 55,
+        sutBotId: 88,
+        message: {
+          updateId: 6,
+          messageId: 56,
+          chatId: -100123,
+          senderId: 88,
+          senderIsBot: true,
+          senderUsername: "sut_bot",
+          text: "delayed reply from a previous run",
+          replyToMessageId: 55,
+          timestamp: 1_699_999_999_000,
           inlineButtons: [],
           mediaKinds: [],
         },
@@ -1203,6 +1229,7 @@ describe("telegram live qa runtime", () => {
         testing.matchesTelegramScenarioReply({
           groupId: "-100123",
           message,
+          sentAtMs: 1_700_000_000_000,
           sentMessageId: 55,
           sutBotId: 88,
         }),
