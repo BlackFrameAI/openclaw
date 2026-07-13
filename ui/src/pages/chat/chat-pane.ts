@@ -100,6 +100,7 @@ import {
   type ChatPageHost,
 } from "./chat-state.ts";
 import { renderChat, resetChatViewState, type ChatProps } from "./chat-view.ts";
+import { renderCatalogTerminalButton } from "./components/catalog-terminal-button.ts";
 import {
   createBackgroundTasksProps,
   renderBackgroundTasksToggle,
@@ -134,6 +135,7 @@ import {
   storedChatOutboxScopeKey,
 } from "./composer-persistence.ts";
 import { exportChatMarkdown } from "./export.ts";
+import { historyMessageId } from "./history-merge.ts";
 import {
   hasAbortableSessionRun,
   reconcileStaleChatRunAfterSessionStatePublication,
@@ -202,10 +204,6 @@ function nativeHistoryMessageIdentity(message: unknown): string | null {
   }
 }
 
-function catalogMessageId(message: unknown): string | null {
-  const messageId = catalogRawRecord(message)?.messageId;
-  return typeof messageId === "string" && messageId ? messageId : null;
-}
 type ChatPaneConnectionScope = {
   context: ChatPageContext;
   state: ChatPageHost;
@@ -790,9 +788,9 @@ class ChatPane extends OpenClawLightDomElement {
   }
 
   private prependUniqueCatalogMessages(messages: unknown[]): unknown[] {
-    const seenIds = new Set(this.catalogMessages.map(catalogMessageId).filter(Boolean));
+    const seenIds = new Set(this.catalogMessages.map(historyMessageId).filter(Boolean));
     const uniqueMessages = messages.filter((message) => {
-      const messageId = catalogMessageId(message);
+      const messageId = historyMessageId(message);
       if (!messageId || !seenIds.has(messageId)) {
         if (messageId) {
           seenIds.add(messageId);
@@ -1733,6 +1731,7 @@ class ChatPane extends OpenClawLightDomElement {
              drag-and-drop. -->
         <span class="chat-pane__session-title" title=${this.paneTitle}>${this.paneTitle}</span>
         <div class="chat-pane__actions">
+          ${renderCatalogTerminalButton(this.state, this.catalogSession)}
           ${renderSessionDiffToggle(sessionWorkspace)}
           ${renderBackgroundTasksToggle(backgroundTasks)}
           ${renderSessionWorkspaceToggle(sessionWorkspace)}
